@@ -4,8 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login de petianos</title>
-    <link rel="stylesheet" href="./Workshop-backend-em-python-main/Style.css">
 </head>
+
+<style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+    }
+
+    .header {
+        background-color: #005fa3;
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logo img {
+        width: 150px;
+    }
+
+    .user-action {
+        font-size: 18px;
+        position: absolute;
+        right: 20px; /* Posiciona o botão "Entrar" à direita */
+        align-items: center;
+    }
+
+    .action-btn {
+        background-color: #fff;
+        color: #005fa3;
+        border: 1px solid #fff;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .action-btn:hover {
+        background-color: #f0f0f0;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 80px);
+        padding: 20px;
+    }
+
+    .form-wrapper {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+    }
+
+    .login-link p {
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        color: #005fa3;
+        margin-bottom: 20px;
+    }
+
+    .form-wrapper form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .input-group input, 
+    .input-group select {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background-color: transparent;
+        outline: none;
+        font-size: 16px;
+    }
+
+    .input-group i {
+        margin-right: 10px;
+        color: #333;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background-color: #005fa3;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .submit-btn:hover {
+        background-color: #004080;
+    }
+
+    .login-link a {
+        color: #005fa3;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+</style>
 
 <body>
     <header class="header">
@@ -13,7 +140,7 @@
             <img src="logo.png" alt="PET Informática">
         </div>
         <div class="user-action">
-            <button class="action-btn">Entrar</button>
+            <button class="action-btn" onclick="window.location.href='Cadastrar.html'">Cadastrar</button>
         </div>
     </header>
 
