@@ -57,7 +57,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: calc(100vh - 80px);
         padding: 20px;
     }
 
@@ -145,27 +144,29 @@
     </header>
 
     <main class="container">
-        <div class="form-wrapper">
-            <div class="login-link">
-                <p>Não possui uma conta? <a href="Cadastrar.html" id="Cadastrar" class="button">Cadastre aqui</a> </p>
+        <section class="section">
+            <div class="form-wrapper">
+                <div class="login-link">
+                    <p>Não possui uma conta? <a href="Cadastrar.html" id="Cadastrar" class="button">Cadastre aqui</a> </p>
+                </div>
+                <h2>Entrar na sua conta</h2>
+                <form>
+                    <div class="input-group">
+                        <label for="e-mail">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="email" placeholder="Seu e-mail">
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label for="senha">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="senha" placeholder="Sua senha">
+                        </label>
+                    </div>
+                    <button type="button" id="entrar" class="submit-btn">Entrar</button>
+                </form>
             </div>
-            <h2>Entrar na sua conta</h2>
-            <form>
-                <div class="input-group">
-                    <label for="e-mail">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="email" placeholder="Seu e-mail">
-                    </label>
-                </div>
-                <div class="input-group">
-                    <label for="senha">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="senha" placeholder="Sua senha">
-                    </label>
-                </div>
-                <button type="button" id="entrar" class="submit-btn">Entrar</button>
-            </form>
-        </div>
+        </section> 
     </main>
 
     <script src="Entrar.js"></script>
