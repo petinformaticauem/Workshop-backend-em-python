@@ -1,4 +1,5 @@
 Como executar esse programa:
+
 1° criar um ambiente virtual usando venv:
   - Na pasta raiz desse projeto (/work-shop-backend-em-python) digite o comando no terminal: "py -m venv venv", se for windows
 
