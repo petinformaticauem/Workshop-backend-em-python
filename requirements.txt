@@ -1,7 +1,4 @@
 fastapi
 uvicorn
-poetry
-passlib[bcrypt]
-python-jose
 sqlalchemy
 python-multipart
