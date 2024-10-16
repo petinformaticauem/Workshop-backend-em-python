@@ -6,7 +6,7 @@ class Petiano_BD(Base):
     __tablename__ = "Petianos"
 
     id = Column(Integer, primary_key=True)
-    NomeCompleto = Column(String, unique=True, index=True)
-    Email = Column(String, unique=True, index=True)
+    NomeCompleto = Column(String)
     CPF = Column(String, unique=True, index=True)
+    Email = Column(String, unique=True, index=True)
     Curso = Column(String)
