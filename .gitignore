@@ -1,2 +1,3 @@
-/venv/
 /backend/app.db
+venv/
+.vscode/
