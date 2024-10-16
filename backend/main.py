@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from models import Base
 from database import engine, SessaoLocal
-from schemas import PetianoBase, PetianoListar
+from schemas import PetianoAtualizar, PetianoBase, PetianoListar
 import crud
 
 # Cria as tabelas do banco de dados
@@ -21,6 +21,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def get_db():
     """Obtém uma sessão de banco de dados para cada requisição."""
     db = SessaoLocal()
@@ -29,57 +30,69 @@ def get_db():
     finally:
         db.close()
 
-#CREATE:
-@app.post("/cadastro", response_model= PetianoBase)
+
+# CREATE:
+@app.post("/petiano", response_model=PetianoBase)
 def criar_petiano(petiano: PetianoBase, db: Session = Depends(get_db)):
     """Rota para cadastrar um petiano"""
     return crud.criar_petiano(petiano, db)
 
-#READ:
-@app.get("/petiano", response_model= PetianoListar)
-def obter_petiano(petiano_id, db: Session = Depends(get_db)):
-    """Rota para listar um petiano cadastrado usando o id"""
 
-    petiano_obtido = crud.obter_petiano(petiano_id, db)
-    if petiano_obtido:
-        return petiano_obtido
-    
-    if not petiano_obtido:
-        raise HTTPException(status_code=404, detail="Petiano não encontrado")
+# READ:
+@app.get("/petiano")
+def obter_petiano(petiano_id=None, db: Session = Depends(get_db)):
+    """Rota para listar um petiano cadastrado usando o id ou todos os petianos"""
 
-@app.get("/petianos", response_model= list[PetianoListar])
-def obter_petianos(db: Session = Depends(get_db)):
-    """Rota para listar todos os petianos cadastrados"""
-    return crud.obter_petianos(db)
+    if petiano_id:
+        petiano_obtido = crud.obter_petiano(petiano_id, db)
+        if petiano_obtido:
+            return petiano_obtido
 
-#UPDATE:
-@app.put("/petiano", response_model= PetianoListar)
-def atualizar_petiano(petiano_id, nome_atualizado, email_atualizado, curso_atualizado, db: Session = Depends(get_db), ):
+        if not petiano_obtido:
+            raise HTTPException(status_code=404, detail="Petiano não encontrado")
+    else:
+        return crud.obter_petianos(db)
+
+
+# @app.get("/petianos", response_model=list[PetianoListar])
+# def obter_petianos(db: Session = Depends(get_db)):
+#     """Rota para listar todos os petianos cadastrados"""
+#     return crud.obter_petianos(db)
+
+
+# UPDATE:
+@app.put("/petiano", response_model=PetianoListar)
+def atualizar_petiano(
+    petiano_id,
+    petiano: PetianoAtualizar,
+    db: Session = Depends(get_db),
+):
     """Rota para atualizar o registro de um petiano"""
-    
-    #Chama a funcao para atualizar os dados do petiano:
-    petiano_atualizado = crud.atualizar_petiano(petiano_id, nome_atualizado, email_atualizado, curso_atualizado, db)
-    
-    #Se o petiano foi atualizado corretamente, ele é retornado:
+
+    # Chama a funcao para atualizar os dados do petiano:
+    petiano_atualizado = crud.atualizar_petiano(petiano_id, petiano, db)
+
+    # Se o petiano foi atualizado corretamente, ele é retornado:
     if petiano_atualizado:
         return petiano_atualizado
-    
-    #Se o petiano nao existir, mostra uma mensagem de erro:
+
+    # Se o petiano nao existir, mostra uma mensagem de erro:
     if not petiano_atualizado:
         raise HTTPException(status_code=404, detail="Petiano não encontrado")
 
-#DELETE
-@app.delete("/petianos", response_model= PetianoListar)
+
+# DELETE
+@app.delete("/petiano", response_model=PetianoListar)
 def remover_petiano(petiano_id, db: Session = Depends(get_db)):
     """Remove um petiano cadastrado e retorna suas informações"""
 
-    #Chama a função para remover o registro do petiano do BD
-    petino_removido = crud.remover_petiano(petiano_id, db) 
-    
+    # Chama a função para remover o registro do petiano do BD
+    petino_removido = crud.remover_petiano(petiano_id, db)
+
     # Se o petiano foi removido do BD corretamente, o registro dele é retornado:
-    if(petino_removido):
+    if petino_removido:
         return petino_removido
-    
+
     # Se o petiano não existir, mostra uma mensagem de erro
     if not petino_removido:
         raise HTTPException(status_code=404, detail="Petiano não encontrado")
