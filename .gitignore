@@ -1,3 +1,4 @@
 /backend/app.db
 venv/
 .vscode/
+backend/__pycache__/
