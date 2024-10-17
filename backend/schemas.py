@@ -18,12 +18,9 @@ class PetianoLer(PetianoBase):
     """Esquema para ler petianos."""
 
     id: int
-    
-    class Config:
-        orm_mode = True
 
     class Config:
-        orm_mode = True  # Permite que o Pydantic converta objetos ORM em JSON
+        from_attributes = True  # Permite que o Pydantic converta objetos ORM em JSON
 
 
 class PetianoAtualizar(BaseModel):

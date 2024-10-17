@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from models import Petiano_BD
-from schemas import PetianoAtualizar, PetianoBase, PetianoCriar
+from schemas import PetianoAtualizar, PetianoCriar
 from fastapi import HTTPException
 
 

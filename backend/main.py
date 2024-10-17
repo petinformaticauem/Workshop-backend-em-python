@@ -1,14 +1,10 @@
-<<<<<<< Updated upstream
-from fastapi import FastAPI, Depends
-=======
-from fastapi import FastAPI, Depends, HTTPException, status
->>>>>>> Stashed changes
+from fastapi import FastAPI, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from models import Base
 from database import engine, SessaoLocal
-from schemas import PetianoAtualizar, PetianoBase, PetianoCriar, PetianoLer
+from schemas import PetianoAtualizar, PetianoCriar, PetianoLer
 import crud
 
 # Cria as tabelas do banco de dados
@@ -59,7 +55,7 @@ def obter_petianos(db: Session = Depends(get_db)):
 
 
 # UPDATE:
-@app.put("/petiano/{id}", response_model=PetianoLer, request_model=PetianoAtualizar)
+@app.put("/petiano/{id}", response_model=PetianoLer)
 def atualizar_petiano(
     id: int,
     petiano: PetianoAtualizar,
@@ -71,8 +67,8 @@ def atualizar_petiano(
 
 
 # DELETE
-@app.delete("/petiano", status_code=status.HTTP_204_NO_CONTENT)
-def remover_petiano(petiano_id, db: Session = Depends(get_db)):
+@app.delete("/petiano/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def remover_petiano(id: int, db: Session = Depends(get_db)):
     """Remove um petiano cadastrado e retorna suas informações"""
 
-    crud.remover_petiano(petiano_id, db)
+    crud.remover_petiano(id, db)
