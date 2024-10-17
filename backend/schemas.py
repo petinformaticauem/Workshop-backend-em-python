@@ -19,6 +19,9 @@ class PetianoListar(BaseModel):
     Email: str
     Curso: str
 
+    class Config:
+        orm_mode = True  # Permite que o Pydantic converta objetos ORM em JSON
+
 
 class PetianoAtualizar(BaseModel):
     """Esquema para atualizar um petiano."""
@@ -28,5 +31,4 @@ class PetianoAtualizar(BaseModel):
     Curso: str
 
 
-class Config:
-    orm_mode = True  # Permite que o Pydantic converta objetos ORM em JSON
+

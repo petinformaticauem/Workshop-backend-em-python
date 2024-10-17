@@ -1,70 +1,83 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+
 from models import Petiano_BD
 from schemas import PetianoAtualizar, PetianoBase
-
 
 def criar_petiano(petiano: PetianoBase, db: Session):
     """Cadastra um novo petiano."""
 
-    # Verifica se o CPF e email ja estão sendo usados
+    # Verifica se o CPFjá está sendo usado, se estiver mostra uma mensagem de erro:
     cpf_repetido = db.query(Petiano_BD).filter(Petiano_BD.CPF == petiano.CPF).first()
     if cpf_repetido:
-        raise ValueError("Ja existe um petiano com esse CPF.")
+        raise HTTPException(status_code=409, detail="Já existe petiano com esse CPF")
 
-    email_repetido = (
-        db.query(Petiano_BD).filter(Petiano_BD.Email == petiano.Email).first()
-    )
+    # Verifica se o e-mail já está sendo usado, se estiver mostra uma mensagem de erro:
+    email_repetido = db.query(Petiano_BD).filter(Petiano_BD.Email == petiano.Email).first()
     if email_repetido:
-        raise ValueError("Ja existe um petiano com esse e-mail.")
+       raise HTTPException(status_code=409, detail="Já existe petiano com esse e-mail")
 
-    # Adiciona o petiano no banco de dados
+    # Se cpf e o e-mail não estiverem sendo usados, adiciona o petiano no banco de dados:
     if not cpf_repetido and not email_repetido:
         novo_petiano = Petiano_BD(**petiano.dict())
         db.add(novo_petiano)
         db.commit()
         db.refresh(novo_petiano)
-        return novo_petiano
+        return db.query(Petiano_BD).filter(Petiano_BD.id == novo_petiano.id).first()
 
 
 def obter_petianos(db: Session):
     """Retorna as informações de todos os petiano."""
+
+    # Retorna uma busca por todos os petianos:
     return db.query(Petiano_BD).all()
 
 
 def obter_petiano(petiano_id, db: Session):
-    """Retorna as informações de um petiano."""
-    return db.query(Petiano_BD).filter(Petiano_BD.id == petiano_id).first()
+    """Retorna as informações de um petiano usando seu id."""
+
+    # Faz a busca pelo petiano:
+    petiano = db.query(Petiano_BD).filter(Petiano_BD.id == petiano_id).first()
+
+    # Se o petiano existir, o registro dele é retornado:
+    if petiano:
+        return petiano
+
+    # Se o petiano não existir, mostra uma mensagem de erro:
+    else:
+        raise HTTPException(status_code=404, detail="Petiano não encontrado")
 
 
 def atualizar_petiano(petiano_id: int, petiano_atualizado: PetianoAtualizar, db: Session):
     """Atualiza o cadastro de um petiano a partir de seu id."""
+
+    # Faz a busca pelo petiano:
     petiano = db.query(Petiano_BD).filter(Petiano_BD.id == petiano_id).first()
 
+    # Se o petiano existir, temos que verificar o email
     if petiano:
+        # Faz a busca pelo email que será atualizado:
+        petiano_com_email_repetido = db.query(Petiano_BD).filter(Petiano_BD.Email == petiano_atualizado.Email).first() 
+    
+        # Verifica se já existe um registro de email com o email novo e se esse registro é o mesmo que está sendo alterado
+        if petiano_com_email_repetido and (int(petiano_com_email_repetido.id) != int(petiano_id)):
+            raise HTTPException(status_code=409, detail="Já existe petiano com esse e-mail")
+        
+        # Faz a atualização e retorna o petiano
         petiano.NomeCompleto = petiano_atualizado.NomeCompleto # type: ignore
         petiano.Email = petiano_atualizado.Email # type: ignore
         petiano.Curso = petiano_atualizado.Curso # type: ignore
         db.commit()
         db.refresh(petiano)
         return petiano
-
-
-'''
-def atualizar_nomecompleto_e_curso_petiano(db: Session,  petiano_id: int, NomeCompleto: str|None, Curso: str|None   ):             
-    """Atualiza o cadastro de um petiano."""
-    petiano = db.query(Petiano_BD).filter(Petiano_BD.id == petiano_id)
-    if petiano:
-        petiano.NomeCompleto = NomeCompleto
-        petiano.Curso = Curso
-        db.commit()
-        db.refresh(petiano)
-    return petiano
-'''
+    
+    # Se o petiano não existir, mostra uma mensagem de erro:
+    else: 
+        raise HTTPException(status_code=404, detail="Petiano não encontrado")
 
 
 def remover_petiano(petiano_id: int, db: Session):
-    """Remove o registro de um petiano.
-    Se o petiano for removido, as informações dele serão retornadas"""
+    """Remove o registro de um petiano."""
 
     # Faz a busca pelo petiano:
     petiano = db.query(Petiano_BD).filter(Petiano_BD.id == petiano_id).first()
@@ -74,3 +87,7 @@ def remover_petiano(petiano_id: int, db: Session):
         db.delete(petiano)
         db.commit()
         return petiano
+
+    # Se o petiano não existir, mostra uma mensagem de erro
+    else:
+        raise HTTPException(status_code=404, detail="Petiano não encontrado")

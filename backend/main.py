@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
@@ -32,9 +32,10 @@ def get_db():
 
 
 # CREATE:
-@app.post("/petiano", response_model=PetianoBase)
+@app.post("/petiano", response_model=PetianoListar)
 def criar_petiano(petiano: PetianoBase, db: Session = Depends(get_db)):
     """Rota para cadastrar um petiano"""
+    
     return crud.criar_petiano(petiano, db)
 
 
@@ -44,12 +45,8 @@ def obter_petiano(petiano_id=None, db: Session = Depends(get_db)):
     """Rota para listar um petiano cadastrado usando o id ou todos os petianos"""
 
     if petiano_id:
-        petiano_obtido = crud.obter_petiano(petiano_id, db)
-        if petiano_obtido:
-            return petiano_obtido
-
-        if not petiano_obtido:
-            raise HTTPException(status_code=404, detail="Petiano não encontrado")
+        return crud.obter_petiano(petiano_id, db)
+        
     else:
         return crud.obter_petianos(db)
 
@@ -70,15 +67,7 @@ def atualizar_petiano(
     """Rota para atualizar o registro de um petiano"""
 
     # Chama a funcao para atualizar os dados do petiano:
-    petiano_atualizado = crud.atualizar_petiano(petiano_id, petiano, db)
-
-    # Se o petiano foi atualizado corretamente, ele é retornado:
-    if petiano_atualizado:
-        return petiano_atualizado
-
-    # Se o petiano nao existir, mostra uma mensagem de erro:
-    if not petiano_atualizado:
-        raise HTTPException(status_code=404, detail="Petiano não encontrado")
+    return crud.atualizar_petiano(petiano_id, petiano, db)
 
 
 # DELETE
@@ -87,12 +76,4 @@ def remover_petiano(petiano_id, db: Session = Depends(get_db)):
     """Remove um petiano cadastrado e retorna suas informações"""
 
     # Chama a função para remover o registro do petiano do BD
-    petino_removido = crud.remover_petiano(petiano_id, db)
-
-    # Se o petiano foi removido do BD corretamente, o registro dele é retornado:
-    if petino_removido:
-        return petino_removido
-
-    # Se o petiano não existir, mostra uma mensagem de erro
-    if not petino_removido:
-        raise HTTPException(status_code=404, detail="Petiano não encontrado")
+    return crud.remover_petiano(petiano_id, db)
