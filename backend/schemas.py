@@ -9,15 +9,18 @@ class PetianoBase(BaseModel):
     Email: str
     Curso: str
 
+class PetianoCriar(PetianoBase):
+    """Esquema para criar um petiano."""
+    pass
 
-class PetianoListar(BaseModel):
-    """Esquema para listar petianos."""
+
+class PetianoLer(PetianoBase):
+    """Esquema para ler petianos."""
 
     id: int
-    NomeCompleto: str
-    CPF: str
-    Email: str
-    Curso: str
+    
+    class Config:
+        orm_mode = True
 
     class Config:
         orm_mode = True  # Permite que o Pydantic converta objetos ORM em JSON
@@ -29,6 +32,3 @@ class PetianoAtualizar(BaseModel):
     NomeCompleto: str
     Email: str
     Curso: str
-
-
-

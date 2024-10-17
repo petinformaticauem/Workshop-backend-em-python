@@ -1,10 +1,14 @@
+<<<<<<< Updated upstream
 from fastapi import FastAPI, Depends
+=======
+from fastapi import FastAPI, Depends, HTTPException, status
+>>>>>>> Stashed changes
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from models import Base
 from database import engine, SessaoLocal
-from schemas import PetianoAtualizar, PetianoBase, PetianoListar
+from schemas import PetianoAtualizar, PetianoBase, PetianoCriar, PetianoLer
 import crud
 
 # Cria as tabelas do banco de dados
@@ -32,48 +36,43 @@ def get_db():
 
 
 # CREATE:
-@app.post("/petiano", response_model=PetianoListar)
-def criar_petiano(petiano: PetianoBase, db: Session = Depends(get_db)):
+@app.post("/petiano", response_model=PetianoLer)
+def criar_petiano(petiano: PetianoCriar, db: Session = Depends(get_db)):
     """Rota para cadastrar um petiano"""
-    
+
     return crud.criar_petiano(petiano, db)
 
 
 # READ:
-@app.get("/petiano")
-def obter_petiano(petiano_id=None, db: Session = Depends(get_db)):
-    """Rota para listar um petiano cadastrado usando o id ou todos os petianos"""
-
-    if petiano_id:
-        return crud.obter_petiano(petiano_id, db)
-        
-    else:
-        return crud.obter_petianos(db)
+@app.get("/petiano/{id}", response_model=PetianoLer)
+def obter_petiano(id: int, db: Session = Depends(get_db)):
+    """Rota para recuperar os dados de um petiano"""
+    
+    return crud.obter_petiano(id, db)
 
 
-# @app.get("/petianos", response_model=list[PetianoListar])
-# def obter_petianos(db: Session = Depends(get_db)):
-#     """Rota para listar todos os petianos cadastrados"""
-#     return crud.obter_petianos(db)
+@app.get("/petiano", response_model=list[PetianoLer])
+def obter_petianos(db: Session = Depends(get_db)):
+    """Rota para listar todos os petianos cadastrados"""
+
+    return crud.obter_petianos(db)
 
 
 # UPDATE:
-@app.put("/petiano", response_model=PetianoListar)
+@app.put("/petiano/{id}", response_model=PetianoLer, request_model=PetianoAtualizar)
 def atualizar_petiano(
-    petiano_id,
+    id: int,
     petiano: PetianoAtualizar,
     db: Session = Depends(get_db),
 ):
     """Rota para atualizar o registro de um petiano"""
 
-    # Chama a funcao para atualizar os dados do petiano:
-    return crud.atualizar_petiano(petiano_id, petiano, db)
+    return crud.atualizar_petiano(id, petiano, db)
 
 
 # DELETE
-@app.delete("/petiano", response_model=PetianoListar)
+@app.delete("/petiano", status_code=status.HTTP_204_NO_CONTENT)
 def remover_petiano(petiano_id, db: Session = Depends(get_db)):
     """Remove um petiano cadastrado e retorna suas informações"""
 
-    # Chama a função para remover o registro do petiano do BD
-    return crud.remover_petiano(petiano_id, db)
+    crud.remover_petiano(petiano_id, db)
