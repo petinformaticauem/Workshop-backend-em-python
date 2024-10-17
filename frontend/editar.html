@@ -127,10 +127,7 @@
   <body>
     <header class="header">
       <div class="user-action">
-        <button
-          class="action-btn"
-          onclick="window.location.href='dashboard.html'"
-        >
+        <button class="action-btn" onclick="window.location.href='index.html'">
           Voltar
         </button>
       </div>
@@ -235,7 +232,7 @@
       async function fetchPersonData() {
         try {
           const response = await fetch(
-            `http://127.0.0.1:8000/petiano?petiano_id=${personId}`
+            `http://127.0.0.1:8000/petiano/${personId}`
           );
           const person = await response.json();
 
@@ -268,7 +265,7 @@
         try {
           // Send the PUT request to the API
           const response = await fetch(
-            `http://127.0.0.1:8000/petiano?petiano_id=${personId}`,
+            `http://127.0.0.1:8000/petiano/${personId}`,
             {
               method: "PUT",
               headers: {
@@ -298,7 +295,7 @@
         if (confirmText === "Eu quero excluir minha conta") {
           try {
             const response = await fetch(
-              `http://127.0.0.1:8000/petiano?petiano_id=${personId}`,
+              `http://127.0.0.1:8000/petiano/${personId}`,
               {
                 method: "DELETE",
                 headers: {
@@ -306,6 +303,11 @@
                 },
               }
             );
+
+            if (response.ok) {
+              alert("Conta excluída com sucesso!");
+              window.location.href = "index.html";
+            }
           } catch (error) {
             console.error("Erro na requisição:", error);
             alert("Erro na comunicação com o servidor.");

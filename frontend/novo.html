@@ -145,7 +145,7 @@
       <div class="user-action">
         <button
           class="action-btn"
-          onclick="window.location.href='dashboard.html'"
+          onclick="window.location.href='index.html'"
         >
           Voltar
         </button>
@@ -286,7 +286,7 @@
           console.log(person);
 
           try {
-            // Send the PUT request to the API
+            // Send the POST request to the API
             const response = await fetch(`http://127.0.0.1:8000/petiano`, {
               method: "POST",
               headers: {
@@ -298,10 +298,11 @@
             // Check if the request was successful
             if (response.ok) {
               alert("Petiano cadastrado com sucesso!");
+              window.location.href = "index.html";
             } else {
               const errorData = await response.json();
               console.error("Erro:", errorData);
-              alert("Erro ao cadastrar petiano!");
+              alert(errorData.detail);
             }
           } catch (error) {
             console.error("Erro na requisição:", error);
